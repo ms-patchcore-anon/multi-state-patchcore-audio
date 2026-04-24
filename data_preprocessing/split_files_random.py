@@ -1,25 +1,39 @@
 """
-01_split_files_random.py
-------------------------
+split_files_random.py
+---------------------
 
 Create a reproducible file-level train/validation/test split for extracted
-0.2 s waveform windows.
+waveform windows.
 
-Default input path points to the output of:
-    data_preparation/extract_0.2secWindows_3Classes.py
+This script is shared by both the 0.2 s and 0.4 s preprocessing pipelines.
+Use --dataset_root to select the corresponding extracted-window dataset.
 
-For the full private dataset, pass the extracted-window dataset root via
---dataset_root.
+Default input path points to the 0.2 s sample output folder:
+    outputs/sample_windows_0p2s_3class/
 
-Input:
-- outputs/sample_windows_0p2s_3class/
+For 0.4 s windows, pass:
+    --dataset_root outputs/sample_windows_0p4s_3class
+
+For the full private dataset, pass the extracted-window dataset root via:
+    --dataset_root
+
+Expected input structure:
+- <dataset_root>/
     Class_1/  -- noisy background
     Class_2/  -- malfunction events
     Class_4/  -- clean background
 
 Output:
-- outputs/sample_windows_0p2s_3class/File_split_CSVs/file_split.csv
-- outputs/sample_windows_0p2s_3class/File_split_CSVs/file_split_runinfo.json
+- <dataset_root>/File_split_CSVs/file_split.csv
+- <dataset_root>/File_split_CSVs/file_split_runinfo.json
+
+Example usage for 0.2 s windows:
+    python data_preprocessing/split_files_random.py \
+        --dataset_root outputs/sample_windows_0p2s_3class
+
+Example usage for 0.4 s windows:
+    python data_preprocessing/split_files_random.py \
+        --dataset_root outputs/sample_windows_0p4s_3class
 """
 
 from __future__ import annotations

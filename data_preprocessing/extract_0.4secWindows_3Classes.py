@@ -1,8 +1,8 @@
 """
-extract_0.2secWindows_3Classes.py
+extract_0.4secWindows_3Classes.py
 ---------------------------------
 
-This script generates fixed-length waveform windows of 0.2 s from long audio
+This script generates fixed-length waveform windows of 0.4 s from long audio
 recordings using event-level annotations provided in a CSV file.
 
 We construct three classes:
@@ -29,7 +29,7 @@ Input annotation CSV:
     AudioDataset/Sample Annotations/matching_df_one_event_per_row_3_subset.csv
 
 Output directory:
-    outputs/sample_windows_0p2s_3class/
+    outputs/sample_windows_0p4s_3class/
         Class_1/
         Class_2/
         Class_4/
@@ -49,7 +49,7 @@ import soundfile as sf
 # ============================================================
 
 parser = argparse.ArgumentParser(
-    description="Generate fixed-length 0.2 s waveform windows from annotated audio."
+    description="Generate fixed-length 0.4 s waveform windows from annotated audio."
 )
 
 parser.add_argument(
@@ -69,8 +69,8 @@ parser.add_argument(
 parser.add_argument(
     "--out_base",
     type=Path,
-    default=Path("outputs/sample_windows_0p2s_3class"),
-    help="Output directory for extracted 0.2 s windows.",
+    default=Path("outputs/sample_windows_0p4s_3class"),
+    help="Output directory for extracted 0.4 s windows.",
 )
 
 args = parser.parse_args()
@@ -94,18 +94,18 @@ CLASS_FOLDERS = {
 # consistent temporal resolution across files.
 SR = 25600
 
-# Window configuration: 0.2 s = 5120 samples at 25.6 kHz.
-WIN_SEC = 0.2
+# Window configuration: 0.4 s = 10240 samples at 25.6 kHz.
+WIN_SEC = 0.4
 WIN_SAMP = int(WIN_SEC * SR)
 
 # Sliding-window hop size for Class_1 and Class_4.
-# A hop of 0.1 s corresponds to 50% overlap.
-HOP_SEC = 0.1
+# A hop of 0.2 s corresponds to 50% overlap.
+HOP_SEC = 0.2
 HOP_SAMP = int(HOP_SEC * SR)
 
 # We enlarge malfunction intervals by a small temporal margin so that
 # background windows do not accidentally include malfunction content.
-EXCLUDE_MARGIN = 0.05  # seconds
+EXCLUDE_MARGIN = 0.10  # seconds
 
 # For Class_2, we generate multiple windows around the event center
 # using small deterministic temporal offsets.
@@ -141,7 +141,7 @@ def find_wav_file(file_number: int) -> Path | None:
 
 def clamp_centered_window(center_sec: float, signal_len: int) -> tuple[int, int]:
     """
-    Construct a centered 0.2 s window around a given time point.
+    Construct a centered 0.4 s window around a given time point.
 
     The window is clamped to valid signal boundaries so that the extracted
     segment always remains within the waveform.
@@ -239,7 +239,7 @@ for file_id, group in df.groupby("File_name"):
             float(row["Time_To_Reference"])
         ) / 2.0
 
-        max_jitter = min(0.05, WIN_SEC / 4)
+        max_jitter = min(0.10, WIN_SEC / 4)
         offsets = np.linspace(-max_jitter, max_jitter, K_JITTER)
 
         for off in offsets:
@@ -325,4 +325,4 @@ for cls, items in windows.items():
         out_path = out_dir / f"{cls}_{int(file_id)}_{int(start)}_{i:04d}.wav"
         sf.write(out_path, audio, SR)
 
-print("\nDone. Saved 0.2 s waveform windows to:", OUT_BASE)
+print("\nDone. Saved 0.4 s waveform windows to:", OUT_BASE)

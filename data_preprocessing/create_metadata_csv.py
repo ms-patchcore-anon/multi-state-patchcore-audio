@@ -4,6 +4,9 @@ create_metadata_csv.py
 
 Create a metadata CSV for extracted log-mel files.
 
+This script is shared by both the 0.2 s and 0.4 s preprocessing pipelines.
+Use --dataset_root to select the corresponding extracted-window dataset.
+
 The output CSV contains the following columns:
 - path
 - label
@@ -11,14 +14,22 @@ The output CSV contains the following columns:
 - file_id
 - split
 
-Input:
-- outputs/sample_windows_0p2s_3class/File_split_CSVs/file_split.csv
-- outputs/sample_windows_0p2s_3class/Class_1_log-mels/
-- outputs/sample_windows_0p2s_3class/Class_2_log-mels/
-- outputs/sample_windows_0p2s_3class/Class_4_log-mels/
+Expected input structure:
+- <dataset_root>/File_split_CSVs/file_split.csv
+- <dataset_root>/Class_1_log-mels/
+- <dataset_root>/Class_2_log-mels/
+- <dataset_root>/Class_4_log-mels/
 
 Output:
-- outputs/sample_windows_0p2s_3class/File_split_CSVs/metadata_logmel.csv
+- <dataset_root>/File_split_CSVs/metadata_logmel.csv
+
+Example usage for 0.2 s windows:
+    python data_preprocessing/create_metadata_csv.py \
+        --dataset_root outputs/sample_windows_0p2s_3class
+
+Example usage for 0.4 s windows:
+    python data_preprocessing/create_metadata_csv.py \
+        --dataset_root outputs/sample_windows_0p4s_3class
 """
 
 from pathlib import Path
@@ -30,8 +41,8 @@ import pandas as pd
 # =========================================================
 # PATHS
 # =========================================================
-# Default path points to the sample output folder created by the data preparation scripts.
-# For the full private dataset, provide --dataset_root from the command line.
+# Default path points to the sample 0.2 s output folder.
+# For 0.4 s or private datasets, provide --dataset_root from the command line.
 
 parser = argparse.ArgumentParser(
     description="Create a metadata CSV for extracted log-mel files."
