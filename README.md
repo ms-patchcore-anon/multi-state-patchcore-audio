@@ -38,8 +38,11 @@ For the paper tables, both pipelines report:
 
 Both pipelines also report confusion matrices and classification reports.
 
+---
+
 ## Repository Structure
 
+```text
 multi-state-patchcore-audio/
 ├── AudioDataset/
 │   ├── Sample Audios/
