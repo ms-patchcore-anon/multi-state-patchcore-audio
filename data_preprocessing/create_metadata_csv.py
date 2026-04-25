@@ -20,8 +20,11 @@ Expected input structure:
 - <dataset_root>/Class_2_log-mels/
 - <dataset_root>/Class_4_log-mels/
 
-Output:
+Outputs:
 - <dataset_root>/File_split_CSVs/metadata_logmel.csv
+- <dataset_root>/File_split_CSVs/train_metadata_logmel.csv
+- <dataset_root>/File_split_CSVs/val_metadata_logmel.csv
+- <dataset_root>/File_split_CSVs/test_metadata_logmel.csv
 
 Example usage for 0.2 s windows:
     python data_preprocessing/create_metadata_csv.py \
@@ -45,7 +48,7 @@ import pandas as pd
 # For 0.4 s or private datasets, provide --dataset_root from the command line.
 
 parser = argparse.ArgumentParser(
-    description="Create a metadata CSV for extracted log-mel files."
+    description="Create metadata CSV files for extracted log-mel files."
 )
 
 parser.add_argument(
@@ -61,7 +64,11 @@ DATASET = args.dataset_root
 CSV_DIR = DATASET / "File_split_CSVs"
 
 SPLIT_CSV = CSV_DIR / "file_split.csv"
+
 OUT_CSV = CSV_DIR / "metadata_logmel.csv"
+TRAIN_OUT_CSV = CSV_DIR / "train_metadata_logmel.csv"
+VAL_OUT_CSV = CSV_DIR / "val_metadata_logmel.csv"
+TEST_OUT_CSV = CSV_DIR / "test_metadata_logmel.csv"
 
 
 # =========================================================
@@ -122,10 +129,36 @@ for class_name, label in CLASS_INFO.items():
         )
 
 df = pd.DataFrame(rows)
+
+
+# =========================================================
+# SAVE FULL METADATA CSV
+# =========================================================
 df.to_csv(OUT_CSV, index=False)
 
+
+# =========================================================
+# SAVE SPLIT-SPECIFIC METADATA CSV FILES
+# =========================================================
+train_df = df[df["split"] == "train"].copy()
+val_df = df[df["split"] == "val"].copy()
+test_df = df[df["split"] == "test"].copy()
+
+train_df.to_csv(TRAIN_OUT_CSV, index=False)
+val_df.to_csv(VAL_OUT_CSV, index=False)
+test_df.to_csv(TEST_OUT_CSV, index=False)
+
+
+# =========================================================
+# REPORT
+# =========================================================
 print(f"Metadata CSV saved to: {OUT_CSV}")
+print(f"Train metadata CSV saved to: {TRAIN_OUT_CSV}")
+print(f"Val metadata CSV saved to: {VAL_OUT_CSV}")
+print(f"Test metadata CSV saved to: {TEST_OUT_CSV}")
+
 print("\nSamples per split:")
 print(df["split"].value_counts())
+
 print("\nSamples per class:")
 print(df["class_name"].value_counts())
