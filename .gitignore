@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Generated outputs
+outputs/
+artifacts/
+
+# Model weights and generated arrays
+*.npy
+*.npz
+*.pth
+*.pt
+*.ckpt
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
