@@ -2,20 +2,16 @@
 
 Anonymous code submission for industrial audio anomaly detection under real-world noise.
 
-This repository contains the code used to evaluate a PatchCore-style anomaly detection pipeline for industrial machine acoustics and compare it against a supervised CNN14-based classification baseline.
-
-The project focuses on short waveform windows extracted from annotated industrial audio recordings. Both pipelines operate on raw waveform windows. The CNN14/PANNs frontend computes log-Mel representations internally.
+This repository contains the code used to evaluate a PatchCore-style anomaly detection pipeline for industrial machine acoustics and compare it against a supervised CNN14-based classification baseline. The project focuses on short waveform windows extracted from annotated industrial audio recordings. Both pipelines operate on raw waveform windows. The CNN14/PANNs frontend computes log-Mel representations internally.
 
 ## Overview
 
 The repository contains two main experimental pipelines:
 
-1. **Supervised CNN baseline**
-
+1. **Supervised CNN baseline**  
    A truncated CNN14 model is fine-tuned for 3-class supervised classification.
 
-2. **Multi-State PatchCore-style retrieval pipeline**
-
+2. **Multi-State PatchCore-style retrieval pipeline**  
    A pretrained CNN14 encoder is used only for feature extraction. No task-specific supervised training is performed for PatchCore. Class-specific memory banks are built for the three operating states, and test samples are classified by nearest-neighbor distance to the corresponding memory banks.
 
 The three classes are:
@@ -26,19 +22,7 @@ The three classes are:
 | `Class_2` | Malfunction event |
 | `Class_4` | Clean background / clean operating condition |
 
-For the paper tables, both pipelines report:
-
-| Metric | Description |
-|---|---|
-| Accuracy | Overall classification accuracy |
-| Macro-F1 | Macro-averaged F1-score |
-| FAR | False alarm rate: normal/background predicted as malfunction |
-| ROC-AUC | Macro one-vs-rest ROC-AUC |
-| PR-AUC | Macro one-vs-rest PR-AUC |
-
-Both pipelines also report confusion matrices and classification reports.
-
----
+For the paper tables, both pipelines report Accuracy, Macro-F1, FAR, ROC-AUC, and PR-AUC. FAR is defined as the rate at which normal/background samples are predicted as the malfunction class. Both pipelines also report confusion matrices and classification reports.
 
 ## Repository Structure
 
@@ -79,7 +63,15 @@ multi-state-patchcore-audio/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
+```
 
+## Setup and Usage
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 The pretrained PANNs CNN14 checkpoint is not included in this repository. Place it manually under:
 
