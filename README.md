@@ -81,16 +81,6 @@ multi-state-patchcore-audio/
 └── .gitignore
 
 
-
-
-## Setup and Usage
-
-Install the required dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
 The pretrained PANNs CNN14 checkpoint is not included in this repository. Place it manually under:
 
 ```text
